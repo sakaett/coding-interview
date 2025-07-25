@@ -1,0 +1,58 @@
+作業記録
+
+・07/06 実働5hくらい
+Docker環境構築。
+
+　構成は以下の通り
+Host OS: Windows10
+Oracle Virtualbox
+Amazon Linux2
+
+nginx django PostgreSQL
+(後にnginxは削除)
+
+・07/10　実働3hくらい
+大量データ処理のテストのため、多少は時間が取れるので仕事の合間に作業
+
+Githubからclone
+Djangoでmigrationし、管理画面を動作させるところまで
+
+python manage.py runserver 172.16.0.2:8000
+
+・07/12　実働2hくらい
+少し時間が取れたので午後に少し作業
+
+　serializerの実装開始
+
+　categoryとcompanyのリレーションについて
+categoryに親categoryの参照が存在し、companyが一つ関連付けされる
+構造から、このcategoryは「企業内の部署」と想定( 企業の業種分類ならcompany側にcategory_idが存在するはず)。
+
+category.company_idにdelete on cascadeが設定されている点から、
+categoryの階層に関わらずcompanyとのリレーションは必須。
+
+category.parent_category is nullでTOP階層のカテゴリ。
+よってGETした場合、自分の階層の下をすべて取得する必要がある?
+
+・07/14 実働4hくらい
+業務の合間に作業
+
+まずはcompamyについて、ModelViewSetを使用してviewを作成、テストを実装してみた。
+CategoryのviewはGenericにする。テストの実装も開始
+
+・07/23 実働3hくらい
+少し時間が取れたので午後に少し作業
+テストの実装を進めつつ、serializerのvalidationを実装
+
+・07/24 実働3hくらい
+午後半休を取ったので、午前の時間少しと、午後の用事を済ませた後に作業
+validation。とりあえずは完成
+
+残りは以下
+
+companyをgetした時、所属するcategoryをtreeで取得したい
+
+・07/24 実働2hくらい
+　「companyをgetした時、所属するcategoryをtreeで取得したい」を実装。
+　ここまでで提出とする。 
+
