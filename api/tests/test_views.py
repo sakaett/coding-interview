@@ -366,6 +366,10 @@ class CompanyViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['name'],'category2 UPDATE')    
 
+        data = {'parent_category': None }
+        response = self.client.patch(f'/api/categories/{category2_id}',json=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['name'],'category2 UPDATE')    
 
     def test_destroy(self):
         # company
