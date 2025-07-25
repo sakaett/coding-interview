@@ -48,6 +48,7 @@ class CategorySerializer(serializers.ModelSerializer):
     parent_category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
         required = False,
+        allow_null = True,
         error_messages={
             'does_not_exist': '指定されたカテゴリは存在しません。',
             'incorrect_type': 'parent_categoryにはuuidを指定してください。',

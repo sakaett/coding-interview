@@ -1,3 +1,4 @@
+import json
 from rest_framework.test import APITestCase
 from rest_framework import status
 from api.models import Company
@@ -366,10 +367,12 @@ class CompanyViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['name'],'category2 UPDATE')    
 
-        data = {'parent_category': None }
-        response = self.client.patch(f'/api/categories/{category2_id}',json=data)
+        # フィールドをnullにしたい場合
+        # ※面倒なので自前でサブクラスでも作成するべき
+        data = json.dumps({'parent_category': None })
+        response = self.client.generic(method='PATCH',path=f'/api/categories/{category2_id}',data=data,content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['name'],'category2 UPDATE')    
+        self.assertEqual(response.json()['parent_category'],None) 
 
     def test_destroy(self):
         # company
