@@ -5,21 +5,21 @@ from api.serializers.company import CompanySerializer
 class CategorySerializer(serializers.ModelSerializer):
 
     def validate(self,attrs):
-        # parent_category‚ª‚ ‚éê‡
+        # parent_categoryãŒã‚ã‚‹å ´åˆ
         if ('parent_category' in attrs) and attrs['parent_category'] is not None:
-            # attrs['parent_category]‚ÍƒIƒuƒWƒFƒNƒg‚ª“ü‚é
-            # Še€–Ú‚Ìvalidate( company = ‚È‚Ç)‚ªæ‚ÉÀs‚³‚ê‚é‚æ‚¤‚Å‚ ‚é
+            # attrs['parent_category]ã¯ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå…¥ã‚‹
+            # å„é …ç›®ã®validate( company = ãªã©)ãŒå…ˆã«å®Ÿè¡Œã•ã‚Œã‚‹ã‚ˆã†ã§ã‚ã‚‹
             parent_category = None
             try:
                 parent_category = Category.objects.get(id=attrs['parent_category'].id)
             except Category.DoesNotExist:
-                # ‚±‚ê‚Ídead code
-                raise serializers.ValidationError('w’è‚³‚ê‚½eƒJƒeƒSƒŠ‚Í‘¶İ‚µ‚Ü‚¹‚ñB2')
-            # ‘¶İ‚·‚éê‡A©•ª‚ÆeƒJƒeƒSƒŠ‚Å‰ïĞ‚ª“¯‚¶‚©‚Ç‚¤‚©
+                # ã“ã‚Œã¯dead code
+                raise serializers.ValidationError('æŒ‡å®šã•ã‚ŒãŸè¦ªã‚«ãƒ†ã‚´ãƒªã¯å­˜åœ¨ã—ã¾ã›ã‚“ã€‚2')
+            # å­˜åœ¨ã™ã‚‹å ´åˆã€è‡ªåˆ†ã¨è¦ªã‚«ãƒ†ã‚´ãƒªã§ä¼šç¤¾ãŒåŒã˜ã‹ã©ã†ã‹
             if ('company' in attrs ) and parent_category.company.id != attrs['company'].id:
-                raise serializers.ValidationError('w’è‚³‚ê‚½eƒJƒeƒSƒŠ‚Ì‰ïĞ‚Æ©•ª‚Ì‰ïĞ‚ªˆÙ‚È‚è‚Ü‚·B')
+                raise serializers.ValidationError('æŒ‡å®šã•ã‚ŒãŸè¦ªã‚«ãƒ†ã‚´ãƒªã®ä¼šç¤¾ã¨è‡ªåˆ†ã®ä¼šç¤¾ãŒç•°ãªã‚Šã¾ã™ã€‚')
             elif self.instance is not None and parent_category.company.id != self.instance.company.id:
-                raise serializers.ValidationError('w’è‚³‚ê‚½eƒJƒeƒSƒŠ‚Ì‰ïĞ‚Æ©•ª‚Ì‰ïĞ‚ªˆÙ‚È‚è‚Ü‚·B')
+                raise serializers.ValidationError('æŒ‡å®šã•ã‚ŒãŸè¦ªã‚«ãƒ†ã‚´ãƒªã®ä¼šç¤¾ã¨è‡ªåˆ†ã®ä¼šç¤¾ãŒç•°ãªã‚Šã¾ã™ã€‚')
 
         return attrs
 
@@ -28,10 +28,10 @@ class CategorySerializer(serializers.ModelSerializer):
         queryset=Company.objects.all(),
         required = True,
         error_messages={
-            'does_not_exist': 'w’è‚³‚ê‚½‰ïĞ‚Í‘¶İ‚µ‚Ü‚¹‚ñB',
-            'incorrect_type': 'company‚É‚Íuuid‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B',
-            'required': '‰ïĞ‚Í•K{‚Å‚·B',
-            'null': 'company.id‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B',
+            'does_not_exist': 'æŒ‡å®šã•ã‚ŒãŸä¼šç¤¾ã¯å­˜åœ¨ã—ã¾ã›ã‚“ã€‚',
+            'incorrect_type': 'companyã«ã¯uuidã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚',
+            'required': 'ä¼šç¤¾ã¯å¿…é ˆã§ã™ã€‚',
+            'null': 'company.idã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚',
         }
     )
 
@@ -39,8 +39,8 @@ class CategorySerializer(serializers.ModelSerializer):
         queryset=Category.objects.all(),
         required = False,
         error_messages={
-            'does_not_exist': 'w’è‚³‚ê‚½ƒJƒeƒSƒŠ‚Í‘¶İ‚µ‚Ü‚¹‚ñB',
-            'incorrect_type': 'parent_category‚É‚Íuuid‚ğw’è‚µ‚Ä‚­‚¾‚³‚¢B',
+            'does_not_exist': 'æŒ‡å®šã•ã‚ŒãŸã‚«ãƒ†ã‚´ãƒªã¯å­˜åœ¨ã—ã¾ã›ã‚“ã€‚',
+            'incorrect_type': 'parent_categoryã«ã¯uuidã‚’æŒ‡å®šã—ã¦ãã ã•ã„ã€‚',
         }
     )
     
@@ -48,9 +48,9 @@ class CategorySerializer(serializers.ModelSerializer):
         required = True,
         max_length = 30,
         error_messages={
-            'max_length': 'ƒJƒeƒSƒŠ–¼‚Í30•¶šˆÈ“à‚Å“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B',
-            'required': 'ƒJƒeƒSƒŠ–¼‚Í•K{‚Å‚·B',
-            'blank': 'ƒJƒeƒSƒŠ–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B',
+            'max_length': 'ã‚«ãƒ†ã‚´ãƒªåã¯30æ–‡å­—ä»¥å†…ã§å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚',
+            'required': 'ã‚«ãƒ†ã‚´ãƒªåã¯å¿…é ˆã§ã™ã€‚',
+            'blank': 'ã‚«ãƒ†ã‚´ãƒªåã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚',
         }  
 
     )

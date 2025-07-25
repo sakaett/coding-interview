@@ -7,16 +7,16 @@ class CompanyViewTests(APITestCase):
     def setUp(self):
         pass
 
-    # create‚ÌƒeƒXƒg
+    # createã®ãƒ†ã‚¹ãƒˆ
     def test_create(self):
-        # companyì¬
+        # companyä½œæˆ
         response = self.client.post('/api/companies/',{'name': 'company_0'})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Company.objects.count(),1)
         self.assertEqual(Company.objects.last().name,'company_0')
 
 
-        #category‚ğcompany‚Ì”z‰º‚Éì¬
+        #categoryã‚’companyã®é…ä¸‹ã«ä½œæˆ
         response = self.client.post('/api/categories/',{'company':Company.objects.last().id,
                                                         'name':'category1'
                                                         })
@@ -25,33 +25,33 @@ class CompanyViewTests(APITestCase):
         self.assertEqual(Category.objects.last().name,'category1')
 
 
-    # postŒn‚Ìvalidation‚ÌƒeƒXƒg
+    # postç³»ã®validationã®ãƒ†ã‚¹ãƒˆ
     def test_validate_post(self):
 
-        # company‚Ìƒ`ƒFƒbƒN
+        # companyã®ãƒã‚§ãƒƒã‚¯
         # name length
         x_name = ""
         for i in range(0,51,1):
-            x_name += "‚ "
+            x_name += "ã‚"
         response = self.client.post('/api/companies/',{'name': x_name})
         errors = response.json()
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(errors['name'][0],'‰ïĞ–¼‚Í50•¶šˆÈ“à‚Å“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B')
+        self.assertEqual(errors['name'][0],'ä¼šç¤¾åã¯50æ–‡å­—ä»¥å†…ã§å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚')
 
         # name blank
         response = self.client.post('/api/companies/',{'name': ''})
         errors = response.json()
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(errors['name'][0],'‰ïĞ–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B')
+        self.assertEqual(errors['name'][0],'ä¼šç¤¾åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚')
 
         # name required
         response = self.client.post('/api/companies/',{})
         errors = response.json()
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(errors['name'][0],'‰ïĞ–¼‚Í•K{‚Å‚·B')
+        self.assertEqual(errors['name'][0],'ä¼šç¤¾åã¯å¿…é ˆã§ã™ã€‚')
 
 
-        # category‚Ìƒ`ƒFƒbƒN
+        # categoryã®ãƒã‚§ãƒƒã‚¯
 
         # company not found
         response = self.client.post('/api/companies/',{'name': 'test'})
@@ -63,7 +63,7 @@ class CompanyViewTests(APITestCase):
                                                         })
         self.assertEqual(response.status_code, 400)
         errors = response.json()
-        self.assertEqual(errors['company'][0],'w’è‚³‚ê‚½‰ïĞ‚Í‘¶İ‚µ‚Ü‚¹‚ñB')
+        self.assertEqual(errors['company'][0],'æŒ‡å®šã•ã‚ŒãŸä¼šç¤¾ã¯å­˜åœ¨ã—ã¾ã›ã‚“ã€‚')
 
         # company required
         response = self.client.post('/api/categories/',{
@@ -71,7 +71,7 @@ class CompanyViewTests(APITestCase):
                                                         })
         self.assertEqual(response.status_code, 400)
         errors = response.json()
-        self.assertEqual(errors['company'][0],'‰ïĞ‚Í•K{‚Å‚·B')
+        self.assertEqual(errors['company'][0],'ä¼šç¤¾ã¯å¿…é ˆã§ã™ã€‚')
 
         # company null
         response = self.client.post('/api/categories/',{'company':'',
@@ -79,26 +79,26 @@ class CompanyViewTests(APITestCase):
                                                         })
         self.assertEqual(response.status_code, 400)
         errors = response.json()
-        self.assertEqual(errors['company'][0],'company.id‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B')
+        self.assertEqual(errors['company'][0],'company.idã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚')
 
         # name length
         response = self.client.post('/api/companies/',{'name': 'test'})
         company_id = Company.objects.last().id
 
         response = self.client.post('/api/companies/',{'name': 'test2'})
-        # ƒŒƒR[ƒh‚ª•¡”‚ ‚éê‡ƒXAlast()‚Í•s’è?‚Ü‚½‚Í”ñ“¯Šúˆ—?
-        # ŠmÀ‚Éid‚ğæ‚é‚È‚çˆÈ‰º
+        # ãƒ¬ã‚³ãƒ¼ãƒ‰ãŒè¤‡æ•°ã‚ã‚‹å ´åˆã‚¹ã€last()ã¯ä¸å®š?ã¾ãŸã¯éåŒæœŸå‡¦ç†?
+        # ç¢ºå®Ÿã«idã‚’å–ã‚‹ãªã‚‰ä»¥ä¸‹
         other_company_id = response.json()['id']
 
         x_name = ""
         for i in range(0,51,1):
-            x_name += "‚ "
+            x_name += "ã‚"
         response = self.client.post('/api/categories/',{'company':company_id,
                                                         'name':f'{x_name}'
                                                         })
         self.assertEqual(response.status_code, 400)
         errors = response.json()
-        self.assertEqual(errors['name'][0],'ƒJƒeƒSƒŠ–¼‚Í30•¶šˆÈ“à‚Å“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B')
+        self.assertEqual(errors['name'][0],'ã‚«ãƒ†ã‚´ãƒªåã¯30æ–‡å­—ä»¥å†…ã§å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚')
 
         # name blank
         response = self.client.post('/api/categories/',{'company':company_id,
@@ -106,16 +106,16 @@ class CompanyViewTests(APITestCase):
                                                         })
         self.assertEqual(response.status_code, 400)
         errors = response.json()
-        self.assertEqual(errors['name'][0],'ƒJƒeƒSƒŠ–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B')
+        self.assertEqual(errors['name'][0],'ã‚«ãƒ†ã‚´ãƒªåã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚')
 
         # name required
         response = self.client.post('/api/categories/',{'company':company_id,
                                                         })
         self.assertEqual(response.status_code, 400)
         errors = response.json()
-        self.assertEqual(errors['name'][0],'ƒJƒeƒSƒŠ–¼‚Í•K{‚Å‚·B')
+        self.assertEqual(errors['name'][0],'ã‚«ãƒ†ã‚´ãƒªåã¯å¿…é ˆã§ã™ã€‚')
 
-        # parent_category ‚ª–³‚¢
+        # parent_category ãŒç„¡ã„
         response = self.client.post('/api/categories/',{'company':company_id,
                                                         'name':'parent_category'
                                                         })
@@ -135,19 +135,19 @@ class CompanyViewTests(APITestCase):
                                                         })
         self.assertEqual(response.status_code, 400)        
         errors = response.json()
-        self.assertEqual(errors['parent_category'][0],'w’è‚³‚ê‚½ƒJƒeƒSƒŠ‚Í‘¶İ‚µ‚Ü‚¹‚ñB')
+        self.assertEqual(errors['parent_category'][0],'æŒ‡å®šã•ã‚ŒãŸã‚«ãƒ†ã‚´ãƒªã¯å­˜åœ¨ã—ã¾ã›ã‚“ã€‚')
 
-        # parent_category‚Ì‰ïĞ‚Æ©•ª‚Ì‰ïĞ‚ªˆÙ‚È‚é
+        # parent_categoryã®ä¼šç¤¾ã¨è‡ªåˆ†ã®ä¼šç¤¾ãŒç•°ãªã‚‹
         response = self.client.post('/api/categories/',{'company':company_id,
                                                         'name':'name1',
                                                         'parent_category':other_category_id
                                                         })
         self.assertEqual(response.status_code, 400)        
         errors = response.json()
-        self.assertEqual(errors['non_field_errors'][0],'w’è‚³‚ê‚½eƒJƒeƒSƒŠ‚Ì‰ïĞ‚Æ©•ª‚Ì‰ïĞ‚ªˆÙ‚È‚è‚Ü‚·B')
+        self.assertEqual(errors['non_field_errors'][0],'æŒ‡å®šã•ã‚ŒãŸè¦ªã‚«ãƒ†ã‚´ãƒªã®ä¼šç¤¾ã¨è‡ªåˆ†ã®ä¼šç¤¾ãŒç•°ãªã‚Šã¾ã™ã€‚')
 
 
-    # XVŒn‚Ìvalidate‚ÌƒeƒXƒg
+    # æ›´æ–°ç³»ã®validateã®ãƒ†ã‚¹ãƒˆ
     def test_validate_patch(self):
         response = self.client.post('/api/companies/',{'name': 'comp1'})
         comp1_id = response.json()['id']
@@ -178,32 +178,32 @@ class CompanyViewTests(APITestCase):
         # company name length
         x_name = ""
         for i in range(0,51,1):
-            x_name += "‚ "
+            x_name += "ã‚"
         response = self.client.patch(f'/api/companies/{comp1_id}/',{'name':f'{x_name}'})
         self.assertEqual(response.status_code, 400)        
         errors = response.json()
-        self.assertEqual(errors['name'][0],'‰ïĞ–¼‚Í50•¶šˆÈ“à‚Å“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B')
+        self.assertEqual(errors['name'][0],'ä¼šç¤¾åã¯50æ–‡å­—ä»¥å†…ã§å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚')
 
         # company name blank
         response = self.client.patch(f'/api/companies/{comp1_id}/',{'name':''})
         self.assertEqual(response.status_code, 400)        
         errors = response.json()
-        self.assertEqual(errors['name'][0],'‰ïĞ–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B')
+        self.assertEqual(errors['name'][0],'ä¼šç¤¾åã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚')
 
-        # company name requiredBpatch‚Å‚Í•”•ªXV‚Å‚ ‚é–‚ÌŠm”F
+        # company name requiredã€‚patchã§ã¯éƒ¨åˆ†æ›´æ–°ã§ã‚ã‚‹äº‹ã®ç¢ºèª
         response = self.client.patch(f'/api/companies/{comp1_id}/',{})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['name'],'comp1')
 
         x_name = ""
         for i in range(0,51,1):
-            x_name += "‚ "
+            x_name += "ã‚"
         response = self.client.patch(f'/api/categories/{cate1_id}',{
                                                         'name':f'{x_name}'
                                                         })
         self.assertEqual(response.status_code, 400)
         errors = response.json()
-        self.assertEqual(errors['name'][0],'ƒJƒeƒSƒŠ–¼‚Í30•¶šˆÈ“à‚Å“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B')
+        self.assertEqual(errors['name'][0],'ã‚«ãƒ†ã‚´ãƒªåã¯30æ–‡å­—ä»¥å†…ã§å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚')
 
         # name blank
         response = self.client.patch(f'/api/categories/{cate1_2_id}',{
@@ -211,15 +211,15 @@ class CompanyViewTests(APITestCase):
                                                         })
         self.assertEqual(response.status_code, 400)
         errors = response.json()
-        self.assertEqual(errors['name'][0],'ƒJƒeƒSƒŠ–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B')
+        self.assertEqual(errors['name'][0],'ã‚«ãƒ†ã‚´ãƒªåã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚')
 
-        # name required patch‚Å•”•ªXV‚È‚Ì‚Å200
+        # name required patchã§éƒ¨åˆ†æ›´æ–°ãªã®ã§200
         response = self.client.patch(f'/api/categories/{cate2_id}',{
                                                         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['name'],'cate2')
 
-        # parent_category ‚ª–³‚¢
+        # parent_category ãŒç„¡ã„
         response = self.client.delete(f'/api/categories/{cate3_id}')
 
         response = self.client.patch(f'/api/categories/{cate1_2_id}',{
@@ -227,15 +227,15 @@ class CompanyViewTests(APITestCase):
                                                         })
         self.assertEqual(response.status_code, 400)        
         errors = response.json()
-        self.assertEqual(errors['parent_category'][0],'w’è‚³‚ê‚½ƒJƒeƒSƒŠ‚Í‘¶İ‚µ‚Ü‚¹‚ñB')
+        self.assertEqual(errors['parent_category'][0],'æŒ‡å®šã•ã‚ŒãŸã‚«ãƒ†ã‚´ãƒªã¯å­˜åœ¨ã—ã¾ã›ã‚“ã€‚')
 
-        # parent_category‚Ì‰ïĞ‚Æ©•ª‚Ì‰ïĞ‚ªˆÙ‚È‚é
+        # parent_categoryã®ä¼šç¤¾ã¨è‡ªåˆ†ã®ä¼šç¤¾ãŒç•°ãªã‚‹
         response = self.client.patch(f'/api/categories/{cate1_2_id}',{
                                                         'parent_category':cate2_id
                                                         })
         errors = response.json()
         self.assertEqual(response.status_code, 400)        
-        self.assertEqual(errors['non_field_errors'][0],'w’è‚³‚ê‚½eƒJƒeƒSƒŠ‚Ì‰ïĞ‚Æ©•ª‚Ì‰ïĞ‚ªˆÙ‚È‚è‚Ü‚·B')
+        self.assertEqual(errors['non_field_errors'][0],'æŒ‡å®šã•ã‚ŒãŸè¦ªã‚«ãƒ†ã‚´ãƒªã®ä¼šç¤¾ã¨è‡ªåˆ†ã®ä¼šç¤¾ãŒç•°ãªã‚Šã¾ã™ã€‚')
 
 
     def test_list(self):
@@ -291,15 +291,15 @@ class CompanyViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
-        # category‚ÌGET
+        # categoryã®GET
         response = self.client.get(f'/api/categories/{category1_id}')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['name'],'category1')
 
-        # company‚ÌGET
-        # company‚ğæ“¾‚µ‚½ê‡AŠ‘®‚·‚éƒJƒeƒSƒŠ‚ğtree‚Åæ“¾‚µ‚½‚¢
+        # companyã®GET
+        # companyã‚’å–å¾—ã—ãŸå ´åˆã€æ‰€å±ã™ã‚‹ã‚«ãƒ†ã‚´ãƒªã‚’treeã§å–å¾—ã—ãŸã„
         response = self.client.get(f'/api/companies/{company_0_id}/')
-        # ‚Æ‚è‚ ‚¦‚¸q‚Ì”‚¾‚¯ƒ`ƒFƒbƒN
+        # ã¨ã‚Šã‚ãˆãšå­ã®æ•°ã ã‘ãƒã‚§ãƒƒã‚¯
         self.assertEqual( len(response.data['categories']),1)
         self.assertEqual( len(response.data['categories'][0]['children']),2)
         self.assertEqual( len(response.data['categories'][0]['children'][0]['children']),1)
@@ -309,13 +309,13 @@ class CompanyViewTests(APITestCase):
         response = self.client.post('/api/companies/',{'name': 'company_1'})
         response = self.client.post('/api/companies/',{'name': 'company_3'})
         response = self.client.get('/api/companies/')
-        # response.data‚ÍOrderdDict
+        # response.dataã¯OrderdDict
         id = response.data[0]['id']
 
         response = self.client.patch(f'/api/companies/{id}/',{'name': 'company_2'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response = self.client.get(f'/api/companies/{id}/')
-        # response.data‚Í˜A‘z”z—ñ
+        # response.dataã¯é€£æƒ³é…åˆ—
         #print(response.json())
         self.assertEqual(response.data['name'],'company_2')
 
@@ -338,7 +338,7 @@ class CompanyViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['name'],'category1 UPDATE')    
 
-        # update category2 parent‚ğcategory1‚É
+        # update category2 parentã‚’category1ã«
         response = self.client.patch(f'/api/categories/{category2_id}',{
                                                         'name':'category2 UPDATE',
                                                         'parent_category': category1_id
@@ -361,7 +361,7 @@ class CompanyViewTests(APITestCase):
         category2 = Category.objects.create(company=company1,name="cate 2",parent_category=category1)
         response = self.client.delete(f'/api/companies/{company1.id}/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        # exception‚Ìƒ`ƒFƒbƒN
+        # exceptionã®ãƒã‚§ãƒƒã‚¯
         with self.assertRaises(Category.DoesNotExist):
             category_chk1 = Category.objects.get(id=category1.id)
         with self.assertRaises(Category.DoesNotExist):
