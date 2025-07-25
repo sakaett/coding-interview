@@ -20,6 +20,16 @@ class CategorySerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('指定された親カテゴリの会社と自分の会社が異なります。')
             elif self.instance is not None and parent_category.company.id != self.instance.company.id:
                 raise serializers.ValidationError('指定された親カテゴリの会社と自分の会社が異なります。')
+            if self.instance is not None:
+                # 自分が他のカテゴリの子になる場合、ループしないようにする必要がある
+                if self.instance.id == attrs['parent_category'].id:
+                    raise serializers.ValidationError('自分は親カテゴリに指定できません。')
+            if self.instance is not None and self.instance.parent_category is None:
+                # 自分が他のカテゴリの子になる場合、ループしないようにする必要がある
+                childCategories = Category.objects.filter(parent_category=self.instance.id)
+                if childCategories.count() > 0:
+                    raise serializers.ValidationError('自分は親カテゴリなので、他のカテゴリの子に指定できません。')
+
 
         return attrs
 

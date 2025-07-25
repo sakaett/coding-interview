@@ -237,6 +237,26 @@ class CompanyViewTests(APITestCase):
         self.assertEqual(response.status_code, 400)        
         self.assertEqual(errors['non_field_errors'][0],'指定された親カテゴリの会社と自分の会社が異なります。')
 
+        # ループ防止。自分の親を自分にしてはいけない
+        response = self.client.patch(f'/api/categories/{cate1_2_id}',{
+                                                        'parent_category':cate1_2_id
+                                                        })
+        errors = response.json()
+        self.assertEqual(response.status_code, 400)        
+        self.assertEqual(errors['non_field_errors'][0],'自分は親カテゴリに指定できません。')
+
+        # ループ防止。自分が親なら他の子になれない
+        response = self.client.patch(f'/api/categories/{cate1_2_id}',{
+                                                        'parent_category':cate1_id
+                                                        })
+        response = self.client.patch(f'/api/categories/{cate1_id}',{
+                                                        'parent_category':cate1_2_id
+                                                        })
+        errors = response.json()
+        self.assertEqual(response.status_code, 400) 
+        self.assertEqual(errors['non_field_errors'][0],'自分は親カテゴリなので、他のカテゴリの子に指定できません。')
+
+
 
     def test_list(self):
         # company
